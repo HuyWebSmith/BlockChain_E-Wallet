@@ -1,30 +1,39 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E_wallet</title>
+    <title>MetaMask Clone UI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>E_wallet</h1>
-        <div id="balance">Balance: 1000 ETH</div>
-
-        <div class="form-group">
-            <label for="recipient">Receiver:</label>
-            <input type="text" id="recipient" placeholder="Enter receiver address">
+    <div class="metamask-container">
+        <div class="metamask-header">
+            <h2>MetaMask</h2>
         </div>
 
-        <div class="form-group">
+        <div class="account-section">
+            <p class="account-label">Account 1</p>
+            <p class="account-address">0xYourWalletAddressHere...</p>
+            <p class="balance" id="balance">Balance: 5000 ETH</p>
+        </div>
+
+        <div class="send-section">
+            <label for="recipient">Recipient Address:</label>
+            <input type="text" id="recipient" placeholder="Enter recipient address">
+
             <label for="amount">Amount (ETH):</label>
             <input type="number" id="amount" placeholder="Enter amount">
+
+            <button class="send-button" id="sendButton">Send</button>
         </div>
 
-        <button id="sendButton">Send</button>
-        <button id="checkBalanceButton">Checking Balance</button>
+        <div class="transaction-section">
+            <p id="transactionStatus">Transaction status will appear here.</p>
+        </div>
     </div>
 
+    <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,25 +1,59 @@
 // script.js
-let balance = 1000.0; // Số dư ban đầu
 
-document.getElementById('sendButton').addEventListener('click', function() {
-    const recipient = document.getElementById('recipient').value;
-    const amount = parseFloat(document.getElementById('amount').value);
+// Initial balance of 5000 ETH
+let balance = 5000;
 
-    if (isNaN(amount) || amount <= 0) {
-        alert("Invalid amount.");
+// Get references to the DOM elements
+const sendButton = document.getElementById('sendButton');
+const transactionStatus = document.getElementById('transactionStatus');
+const recipientInput = document.getElementById('recipient');
+const amountInput = document.getElementById('amount');
+const balanceDisplay = document.getElementById('balance');
+
+// Function to update the balance display
+function updateBalance() {
+    balanceDisplay.innerText = `Balance: ${balance} ETH`;
+}
+
+// Function to simulate sending ETH
+function sendTransaction() {
+    const recipient = recipientInput.value;
+    const amount = parseFloat(amountInput.value);
+
+    // Basic validation to check if the fields are filled
+    if (!recipient || isNaN(amount) || amount <= 0) {
+        transactionStatus.innerText = 'Please enter a valid recipient address and amount.';
+        transactionStatus.style.color = 'red';
         return;
     }
 
+    // Check if the user has enough balance
     if (amount > balance) {
-        alert("Not enough balance.");
+        transactionStatus.innerText = 'Insufficient balance!';
+        transactionStatus.style.color = 'red';
         return;
     }
 
-    balance -= amount;
-    document.getElementById('balance').innerText = "Balance: " + balance + " ETH";
-    alert("Have send " + amount + " ETH to " + recipient);
-});
+    // Simulate a transaction with a delay (to mimic waiting for transaction confirmation)
+    transactionStatus.innerText = 'Sending transaction...';
+    transactionStatus.style.color = 'blue';
 
-document.getElementById('checkBalanceButton').addEventListener('click', function() {
-    alert("Current balance: " + balance + " ETH");
-});
+    setTimeout(() => {
+        // Deduct the amount from the balance
+        balance -= amount;
+
+        // Update the balance display
+        updateBalance();
+
+        // Simulate transaction success
+        transactionStatus.innerText = `Transaction of ${amount} ETH to ${recipient} was successful!`;
+        transactionStatus.style.color = 'green';
+
+        // Clear input fields
+        recipientInput.value = '';
+        amountInput.value = '';
+    }, 2000); // Simulated delay of 2 seconds
+}
+
+// Attach click event listener to the send button
+sendButton.addEventListener('click', sendTransaction);
