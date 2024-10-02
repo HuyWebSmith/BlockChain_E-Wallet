@@ -266,34 +266,6 @@ function openTransactionTab(transaction, hash) {
     }
 }
 
-// Gửi giao dịch
-document.getElementById('sendButton').onclick = async function () {
-    const recipient = document.getElementById('recipient').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-
-    const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
-    const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
-    const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
-
-    if (recipient && amount > 0 && amount <= balance) {
-        balance -= amount;
-        const transaction = {
-            senderPublicKey,
-            senderPrivateKey,
-            recipientPublicKey,
-            amount,
-        };
-        updateBalance();
-
-        // Tạo mã hash cho giao dịch
-        const hash = await hashTransaction(JSON.stringify(transaction));
-        
-        // Mở tab mới với thông tin giao dịch
-        openTransactionTab(transaction, hash);
-    } else {
-        alert("Invalid transaction.");
-    }
-};
 
 // Mua ETH
 document.getElementById('buyButton').onclick = async function () {
