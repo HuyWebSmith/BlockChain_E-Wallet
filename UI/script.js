@@ -190,7 +190,7 @@ async function displayNewTransactionInWindow(tx, type) {
     
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
-            <h4>Transaction ${transactionCount++} (${type})</h4>
+            <h4>Block ${transactionCount++} (${type})</h4>
             <p>Sender Public Key: ${tx.senderPublicKey}</p>
             <p>Sender Private Key: ${tx.senderPrivateKey}</p>
             <p>Recipient Public Key: ${tx.recipientPublicKey}</p>
