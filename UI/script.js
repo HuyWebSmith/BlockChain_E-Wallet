@@ -156,8 +156,11 @@ async function sha256(message) {
     return hashHex;
 }
 
+
+
 // Function to display the new transaction in the opened window
-function displayNewTransactionInWindow(tx, type) {
+async function displayNewTransactionInWindow(tx, type) {
+
     // If the transaction window doesn't exist or is closed, open a new one
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
@@ -165,6 +168,26 @@ function displayNewTransactionInWindow(tx, type) {
         transactionCount = 1; // Reset transaction count
     }
 
+     // Hiện phần Mining...
+    const miningDiv = transactionWindow.document.createElement('div');
+    miningDiv.innerHTML = `Mining<span id="miningDots${transactionCount}">...</span>`;
+    transactionWindow.document.body.appendChild(miningDiv);
+
+     // Hiệu ứng ba dấu chấm
+    const dots = transactionWindow.document.getElementById(`miningDots${transactionCount}`);
+    let dotCount = 0;
+    const interval = setInterval(() => {
+         dotCount = (dotCount + 1) % 4; // 0, 1, 2, 3, 0, 1, ...
+         dots.innerText = '.'.repeat(dotCount); // Thay đổi số lượng dấu chấm
+     }, 500); // Thay đổi mỗi 500ms
+
+     // Mô phỏng thời gian mining
+     await new Promise(resolve => setTimeout(resolve, 3000)); // Chờ 3 giây (thời gian mining)
+
+     clearInterval(interval); // Dừng hiệu ứng
+     dots.innerText = ''; // Xóa dấu chấm
+
+    
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
             <h4>Transaction ${transactionCount++} (${type})</h4>
@@ -174,6 +197,7 @@ function displayNewTransactionInWindow(tx, type) {
             <p>Amount: ${tx.amount} ETH</p>
             <p>Transaction Hash: ${tx.hash}</p>
             ${tx.previousHash ? `<p>Previous Block Hash: ${tx.previousHash}</p>` : '<p>This is the Genesis Block.</p>'}
+            
         </div>
     `;
 }
@@ -217,8 +241,8 @@ document.getElementById('sendButton').addEventListener('click', async function (
     // Update the last transaction hash
     lastTransactionHash = newTransactionHash;
 
-    // Display the new transaction in the window
-    displayNewTransactionInWindow(newTransaction, 'Send');
+    // Hiện phần giao dịch mới trong cửa sổ sau khi mining
+    await displayNewTransactionInWindow(newTransaction, 'Send');
 
     // Update the transaction status
     document.getElementById('transactionStatus').innerText = `Successfully sent ${amount} ETH to ${recipient}!`;
