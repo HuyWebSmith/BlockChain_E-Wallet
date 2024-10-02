@@ -193,13 +193,13 @@ async function displayNewTransactionInWindow(tx, type) {
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
             <h4>Block ${transactionCount++} (${type})</h4>
+            ${tx.previousHash ? `<p>Previous Block Hash: ${tx.previousHash}</p>` : '<p>This is the Genesis Block.</p>'}
             <p>Data: {Sender Public Key: ${tx.senderPublicKey}</p>
             <p>Sender Private Key: ${tx.senderPrivateKey}</p>
             <p>Recipient Public Key: ${tx.recipientPublicKey}</p>
             <p>Amount: ${tx.amount} ETH }</p>
             <p>Timestamp: ${tx.timestamp}</p>
-            <p>Transaction Hash: ${tx.hash}</p>
-            ${tx.previousHash ? `<p>Previous Block Hash: ${tx.previousHash}</p>` : '<p>This is the Genesis Block.</p>'}
+            <p>Hash: ${tx.hash}</p>
             
         </div>
     `;
