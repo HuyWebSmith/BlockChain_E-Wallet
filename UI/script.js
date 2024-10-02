@@ -227,3 +227,123 @@ window.addEventListener('beforeunload', function () {
     transactions = []; // Clear transactions
     lastTransactionHash = null; // Reset the last transaction hash
 });
+
+
+
+//* * Buy and Sell
+
+// Lưu số dư ban đầu
+
+
+// Cập nhật số dư và giao diện
+function updateBalance() {
+    document.getElementById('balance').innerText = `Balance: ${balance} ETH`;
+}
+
+// Hàm băm SHA-256 để tạo mã hash cho giao dịch
+async function hashTransaction(data) {
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(data);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Mở một tab mới với thông tin giao dịch
+function openTransactionTab(transaction, hash) {
+    const newTab = window.open('', '_blank');
+    if (newTab) {
+        newTab.document.write('<html><head><title>Transaction Info</title></head><body>');
+        newTab.document.write('<h3>Transaction Details</h3>');
+        newTab.document.write(`<p><strong>Sender Public Key:</strong> ${transaction.senderPublicKey}</p>`);
+        newTab.document.write(`<p><strong>Sender Private Key:</strong> ${transaction.senderPrivateKey}</p>`);
+        newTab.document.write(`<p><strong>Recipient Public Key:</strong> ${transaction.recipientPublicKey}</p>`);
+        newTab.document.write(`<p><strong>Amount:</strong> ${transaction.amount} ETH</p>`);
+        newTab.document.write(`<p><strong>Transaction Hash:</strong> ${hash}</p>`);
+        newTab.document.write('</body></html>');
+        newTab.document.close();
+    } else {
+        alert('Your browser blocked the new tab. Please allow pop-ups.');
+    }
+}
+
+// Gửi giao dịch
+document.getElementById('sendButton').onclick = async function () {
+    const recipient = document.getElementById('recipient').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+
+    const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+    const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
+    const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+
+    if (recipient && amount > 0 && amount <= balance) {
+        balance -= amount;
+        const transaction = {
+            senderPublicKey,
+            senderPrivateKey,
+            recipientPublicKey,
+            amount,
+        };
+        updateBalance();
+
+        // Tạo mã hash cho giao dịch
+        const hash = await hashTransaction(JSON.stringify(transaction));
+        
+        // Mở tab mới với thông tin giao dịch
+        openTransactionTab(transaction, hash);
+    } else {
+        alert("Invalid transaction.");
+    }
+};
+
+// Mua ETH
+document.getElementById('buyButton').onclick = async function () {
+    const amount = parseFloat(prompt("Enter amount to buy (ETH):"));
+    if (amount > 0) {
+        balance += amount;
+        const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+        const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
+        const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+
+        const transaction = {
+            senderPublicKey,
+            senderPrivateKey,
+            recipientPublicKey,
+            amount,
+        };
+        updateBalance();
+
+        const hash = await hashTransaction(JSON.stringify(transaction));
+
+        openTransactionTab(transaction, hash);
+    } else {
+        alert("Invalid amount.");
+    }
+};
+
+
+// Bán ETH
+document.getElementById('sellButton').onclick = async function () {
+    const amount = parseFloat(prompt("Enter amount to sell (ETH):"));
+    if (amount > 0 && amount <= balance) {
+        balance -= amount; // Giảm số dư khi bán
+
+        const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+        const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
+        const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18); // Mô phỏng địa chỉ nhận
+
+        const transaction = {
+            senderPublicKey,
+            senderPrivateKey,
+            recipientPublicKey,
+            amount,
+        };
+
+        updateBalance(); // Cập nhật lại số dư
+
+        const hash = await hashTransaction(JSON.stringify(transaction)); // Tạo mã hash cho giao dịch
+
+        openTransactionTab(transaction, hash); // Mở tab mới hiển thị thông tin giao dịch
+    } else {
+        alert("Invalid amount or insufficient balance.");
+    }
+};
