@@ -101,6 +101,8 @@ document.getElementById('sendButton').addEventListener('click', function() {
         return;
     }
 
+
+    
     // Trừ số ETH đã gửi khỏi số dư
     ethBalance -= amountToSend;
 
@@ -191,10 +193,11 @@ async function displayNewTransactionInWindow(tx, type) {
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
             <h4>Block ${transactionCount++} (${type})</h4>
-            <p>Sender Public Key: ${tx.senderPublicKey}</p>
+            <p>Data: {Sender Public Key: ${tx.senderPublicKey}</p>
             <p>Sender Private Key: ${tx.senderPrivateKey}</p>
             <p>Recipient Public Key: ${tx.recipientPublicKey}</p>
-            <p>Amount: ${tx.amount} ETH</p>
+            <p>Amount: ${tx.amount} ETH }</p>
+            <p>Timestamp: ${tx.timestamp}</p>
             <p>Transaction Hash: ${tx.hash}</p>
             ${tx.previousHash ? `<p>Previous Block Hash: ${tx.previousHash}</p>` : '<p>This is the Genesis Block.</p>'}
             
@@ -227,6 +230,9 @@ document.getElementById('sendButton').addEventListener('click', async function (
     // Generate a hash for the new transaction
     const newTransactionHash = await generateTransactionHash(amount, recipient, lastTransactionHash);
 
+    // Thêm thuộc tính timestamp vào giao dịch
+    const transactionTimestamp = new Date().toLocaleString(); // Lấy thời gian hiện tại
+
     // Save the transaction in the list
     const newTransaction = {
         senderPublicKey: senderKeys.publicKey,
@@ -234,7 +240,8 @@ document.getElementById('sendButton').addEventListener('click', async function (
         recipientPublicKey: recipientKeys.publicKey,
         amount: amount,
         hash: newTransactionHash,
-        previousHash: lastTransactionHash
+        previousHash: lastTransactionHash,
+        timestamp: transactionTimestamp // Thêm timestamp vào giao dịch
     };
     transactions.push(newTransaction);
 
