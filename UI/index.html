@@ -9,15 +9,17 @@
 <body>
     <div class="metamask-container">
         <div class="metamask-header">
-            <h2>MetaMask</h2>
+            <h2>Demo E-Wallet</h2>
         </div>
 
         <div class="account-section">
             <p class="account-label">Account 1</p>
             <p class="account-address">0xYourWalletAddressHere...</p>
             <p class="balance" id="balance">Balance: 5000 ETH</p>
+            <p class="usd-value" id="usdValue">≈ $15,000</p>
+            <p class="percentage-change" id="percentageChange">Change: +2.5%</p>
         </div>
-
+        
         <div class="send-section">
             <label for="recipient">Recipient Address:</label>
             <input type="text" id="recipient" placeholder="Enter recipient address">
@@ -27,9 +29,10 @@
 
             <button class="send-button" id="sendButton">Send</button>
         </div>
-
+        
         <div class="transaction-section">
             <p id="transactionStatus">Transaction status will appear here.</p>
+            <div id="transactionsContainer"></div> <!-- Khu vực hiển thị giao dịch -->
         </div>
     </div>
 
