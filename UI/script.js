@@ -218,7 +218,7 @@ document.getElementById('sendButton').addEventListener('click', async function (
     lastTransactionHash = newTransactionHash;
 
     // Display the new transaction in the window
-    displayNewTransactionInWindow(newTransaction);
+    displayNewTransactionInWindow(newTransaction, 'Send');
 
     // Update the transaction status
     document.getElementById('transactionStatus').innerText = `Successfully sent ${amount} ETH to ${recipient}!`;
