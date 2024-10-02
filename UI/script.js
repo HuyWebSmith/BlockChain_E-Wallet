@@ -157,7 +157,8 @@ async function sha256(message) {
 }
 
 // Function to display the new transaction in the opened window
-function displayNewTransactionInWindow(tx) {
+function displayNewTransactionInWindow(tx, type) {
+    // If the transaction window doesn't exist or is closed, open a new one
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
         transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
@@ -166,7 +167,7 @@ function displayNewTransactionInWindow(tx) {
 
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
-            <h4>Transaction ${transactionCount++}</h4>
+            <h4>Transaction ${transactionCount++} (${type})</h4>
             <p>Sender Public Key: ${tx.senderPublicKey}</p>
             <p>Sender Private Key: ${tx.senderPrivateKey}</p>
             <p>Recipient Public Key: ${tx.recipientPublicKey}</p>
@@ -176,6 +177,7 @@ function displayNewTransactionInWindow(tx) {
         </div>
     `;
 }
+
 
 // When "Send" button is clicked, create a new transaction and update the display
 document.getElementById('sendButton').addEventListener('click', async function () {
@@ -267,54 +269,55 @@ function openTransactionTab(transaction, hash) {
 }
 
 
-// Mua ETH
+// Buy ETH
 document.getElementById('buyButton').onclick = async function () {
     const amount = parseFloat(prompt("Enter amount to buy (ETH):"));
     if (amount > 0) {
         balance += amount;
-        const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
-        const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
-        const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
+
+        // Generate keys for the transaction
+        const senderKeys = generateKeys();
+        const recipientKeys = generateKeys();
 
         const transaction = {
-            senderPublicKey,
-            senderPrivateKey,
-            recipientPublicKey,
+            senderPublicKey: senderKeys.publicKey,
+            senderPrivateKey: senderKeys.privateKey,
+            recipientPublicKey: recipientKeys.publicKey,
             amount,
         };
+
+        // Update balance and display transaction
         updateBalance();
-
-        const hash = await hashTransaction(JSON.stringify(transaction));
-
-        openTransactionTab(transaction, hash);
+        const hash = await generateTransactionHash(amount, "buy", lastTransactionHash);
+        displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Buy');
+        lastTransactionHash = hash; // Update the last transaction hash
     } else {
         alert("Invalid amount.");
     }
 };
 
-
-// Bán ETH
+// Sell ETH
 document.getElementById('sellButton').onclick = async function () {
     const amount = parseFloat(prompt("Enter amount to sell (ETH):"));
     if (amount > 0 && amount <= balance) {
-        balance -= amount; // Giảm số dư khi bán
+        balance -= amount; // Deduct from balance
 
-        const senderPublicKey = "0x" + Math.random().toString(16).slice(2, 18);
-        const senderPrivateKey = "0x" + Math.random().toString(16).slice(2, 18);
-        const recipientPublicKey = "0x" + Math.random().toString(16).slice(2, 18); // Mô phỏng địa chỉ nhận
+        // Generate keys for the transaction
+        const senderKeys = generateKeys();
+        const recipientKeys = generateKeys();
 
         const transaction = {
-            senderPublicKey,
-            senderPrivateKey,
-            recipientPublicKey,
+            senderPublicKey: senderKeys.publicKey,
+            senderPrivateKey: senderKeys.privateKey,
+            recipientPublicKey: recipientKeys.publicKey,
             amount,
         };
 
-        updateBalance(); // Cập nhật lại số dư
-
-        const hash = await hashTransaction(JSON.stringify(transaction)); // Tạo mã hash cho giao dịch
-
-        openTransactionTab(transaction, hash); // Mở tab mới hiển thị thông tin giao dịch
+        // Update balance and display transaction
+        updateBalance();
+        const hash = await generateTransactionHash(amount, "sell", lastTransactionHash);
+        displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Sell');
+        lastTransactionHash = hash; // Update the last transaction hash
     } else {
         alert("Invalid amount or insufficient balance.");
     }
