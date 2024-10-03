@@ -13,12 +13,30 @@
         </div>
 
         <div class="account-section">
-            <p class="account-label">Account 1</p>
-            <p class="account-address">0xYourWalletAddressHere...</p>
+            <div>
+                <p>Tài Khoản: <span id="accountName">Account 1</span></p>
+                <p>Public Key: <span id="walletAddress">0xYourWalletAddressHere...</span></p>
+            </div>
+            <button id="logoutButton">Đăng Xuất</button>
             <p class="balance" id="balance">Balance: 5000 ETH</p>
             <p class="usd-value" id="usdValue">≈ $15,000</p>
             <p class="percentage-change" id="percentageChange">Change: +2.5%</p>
         </div>
+
+        <script>
+            // Lấy thông tin từ localStorage
+            const username = localStorage.getItem('currentUser');
+            if (username) {
+                const storedUser = JSON.parse(localStorage.getItem(username));
+                document.getElementById('accountName').innerText = username; // Hiển thị tên tài khoản
+                document.getElementById('walletAddress').innerText = storedUser.publicKey; // Hiển thị public key
+            }
+    
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                localStorage.removeItem('currentUser'); // Xóa thông tin đăng nhập
+                window.location.reload(); // Tải lại trang
+            });
+        </script>
         
         <div class="send-section">
             <label for="recipient">Recipient Address:</label>
@@ -33,8 +51,13 @@
             <button class="sell-button" id="sellButton">Sell</button>
         </div>
 
-        
-        
+        <div class="auth-links">
+            <a href="#" id="loginLink">Đăng Nhập</a>
+            <span> | </span>
+            <a href="#" id="registerLink">Đăng Ký</a>
+            
+        </div>
+            
         <div class="transaction-section">
             <p id="transactionStatus">Transaction status will appear here.</p>
             <div id="transactionsContainer"></div> <!-- Khu vực hiển thị giao dịch -->

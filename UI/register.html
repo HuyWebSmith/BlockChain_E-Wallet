@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký</title>
+</head>
+<body>
+    <h2>Đăng Ký</h2>
+    <form id="registerForm">
+        <label for="newUsername">Tài Khoản:</label>
+        <input type="text" id="newUsername" required>
+        <br>
+        <label for="newPassword">Mật Khẩu:</label>
+        <input type="password" id="newPassword" required>
+        <br>
+        <button type="submit">Đăng Ký</button>
+    </form>
+    <div id="registerMessage"></div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+
+            // Kiểm tra xem tài khoản đã tồn tại chưa
+            if (localStorage.getItem(username)) {
+                document.getElementById('registerMessage').innerText = 'Tài khoản đã tồn tại!';
+                return;
+            }
+
+            // Tạo public key và private key giả định
+            const publicKey = `0x${Math.random().toString(16).slice(2, 18)}`; // Random 16 ký tự
+            const privateKey = `0x${Math.random().toString(16).slice(2, 18)}`; // Random 16 ký tự
+
+            // Lưu thông tin tài khoản vào localStorage
+            const user = {
+                username: username,
+                password: password,
+                publicKey: publicKey,
+                privateKey: privateKey
+            };
+            localStorage.setItem(username, JSON.stringify(user)); // Lưu thông tin vào localStorage dưới dạng JSON
+
+            document.getElementById('registerMessage').innerText = 'Đăng Ký Thành Công!';
+
+            // Kiểm tra lưu thành công bằng console log
+            console.log('Tài khoản đã lưu:', JSON.parse(localStorage.getItem(username)));
+
+            window.close(); // Đóng cửa sổ đăng ký sau khi hoàn tất
+        });
+    </script>
+</body>
+</html>

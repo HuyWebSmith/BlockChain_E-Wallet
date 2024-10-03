@@ -107,19 +107,19 @@ body {
 }
 
 .percentage-change {
-    color: green; /* Thay đổi màu tuỳ thuộc vào mức tăng hoặc giảm */
+    color: green; 
 }
 
 .trade-section {
-    display: flex; /* Sắp xếp các nút theo chiều ngang */
-    justify-content: space-between; /* Tạo khoảng cách giữa các nút */
-    margin-top: 15px; /* Khoảng cách trên so với nút Send */
+    display: flex; 
+    justify-content: space-between; 
+    margin-top: 15px; 
 }
 
 .buy-button, .sell-button {
-    width: 49%; /* Chiều rộng bằng 48% để vừa với 100% chiều rộng của nút Send */
+    width: 45%; 
     padding: 10px;
-    background-color: #f6851b; /* Màu nền giống như nút Send */
+    background-color: #f6851b; 
     color: white;
     border: none;
     border-radius: 5px;
@@ -132,7 +132,36 @@ body {
 
 
 .buy-button:hover, .sell-button:hover {
-    background-color: #f37400; /* Màu nền khi hover */
+    background-color: #f37400; 
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.auth-links {
+    margin-top: 0; /* Khoảng cách giữa nút và dòng chữ */
+}
+
+.auth-links a {
+    font-size: 14px; /* Kích thước chữ nhỏ hơn */
+    text-decoration: none; /* Bỏ gạch chân */
+    color: #007bff; /* Màu chữ cho các liên kết */
+}
+
+.auth-links a:hover {
+    text-decoration: underline; /* Thêm gạch chân khi hover */
 }
 
 

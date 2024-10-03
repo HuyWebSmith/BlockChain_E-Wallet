@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+</head>
+<body>
+    <h2>Đăng Nhập</h2>
+    <form id="loginForm">
+        <label for="username">Tài Khoản:</label>
+        <input type="text" id="username" required>
+        <br>
+        <label for="password">Mật Khẩu:</label>
+        <input type="password" id="password" required>
+        <br>
+        <button type="submit">Đăng Nhập</button>
+    </form>
+    <div id="loginMessage"></div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Kiểm tra thông tin đăng nhập
+            const storedUser = JSON.parse(localStorage.getItem(username)); // Lấy thông tin tài khoản từ localStorage
+            if (storedUser && storedUser.password === password) {
+                document.getElementById('loginMessage').innerText = 'Đăng Nhập Thành Công!';
+                localStorage.setItem('currentUser', username); // Lưu tên người dùng
+                alert(`Public Key: ${storedUser.publicKey}\nPrivate Key: ${storedUser.privateKey}`); // Hiển thị key
+                
+                // Tự động đóng cửa sổ sau 1 giây
+                setTimeout(() => {
+                    window.close(); // Đóng cửa sổ đăng nhập
+                }, 1000);
+            } else {
+                document.getElementById('loginMessage').innerText = 'Tài khoản hoặc mật khẩu không đúng!';
+            }
+        });
+    </script>
+</body>
+</html>

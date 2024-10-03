@@ -161,8 +161,8 @@ async function sha256(message) {
 
 
 // Function to display the new transaction in the opened window
+// Function to display the new transaction in the opened window
 async function displayNewTransactionInWindow(tx, type) {
-
     // If the transaction window doesn't exist or is closed, open a new one
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
@@ -170,40 +170,48 @@ async function displayNewTransactionInWindow(tx, type) {
         transactionCount = 1; // Reset transaction count
     }
 
-     // Hiện phần Mining...
+    // Hiện phần Mining...
     const miningDiv = transactionWindow.document.createElement('div');
     miningDiv.innerHTML = `Mining<span id="miningDots${transactionCount}">...</span>`;
     transactionWindow.document.body.appendChild(miningDiv);
 
-     // Hiệu ứng ba dấu chấm
+    // Hiệu ứng ba dấu chấm
     const dots = transactionWindow.document.getElementById(`miningDots${transactionCount}`);
     let dotCount = 0;
     const interval = setInterval(() => {
-         dotCount = (dotCount + 1) % 4; // 0, 1, 2, 3, 0, 1, ...
-         dots.innerText = '.'.repeat(dotCount); // Thay đổi số lượng dấu chấm
-     }, 500); // Thay đổi mỗi 500ms
+        dotCount = (dotCount + 1) % 4; // 0, 1, 2, 3, 0, 1, ...
+        dots.innerText = '.'.repeat(dotCount); // Thay đổi số lượng dấu chấm
+    }, 500); // Thay đổi mỗi 500ms
 
-     // Mô phỏng thời gian mining
-     await new Promise(resolve => setTimeout(resolve, 3000)); // Chờ 3 giây (thời gian mining)
+    // Mô phỏng thời gian mining
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Chờ 3 giây (thời gian mining)
 
-     clearInterval(interval); // Dừng hiệu ứng
-     dots.innerText = ''; // Xóa dấu chấm
+    clearInterval(interval); // Dừng hiệu ứng
+    miningDiv.remove();
 
-    
+    // Lấy thông tin từ localStorage
+    const publicKey = localStorage.getItem('publicKey'); // Lấy khóa công khai từ localStorage
+    const privateKey = localStorage.getItem('privateKey'); // Lấy khóa riêng từ localStorage
+
+    // Tạo phần dữ liệu với định dạng JSON
+    const dataJson = JSON.stringify({
+        "Sender Public Key": publicKey,
+        "Sender Private Key": privateKey,
+        "Recipient Public Key": tx.recipientPublicKey,
+        "Amount": tx.amount
+    }, null, 2); // Tạo định dạng JSON với 2 space
+
     transactionWindow.document.body.innerHTML += `
         <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
-            <h4>Block ${transactionCount++} (${type})</h4>
-            ${tx.previousHash ? `<p>Previous Block Hash: ${tx.previousHash}</p>` : '<p>This is the Genesis Block.</p>'}
-            <p>Data: {Sender Public Key: ${tx.senderPublicKey}</p>
-            <p>Sender Private Key: ${tx.senderPrivateKey}</p>
-            <p>Recipient Public Key: ${tx.recipientPublicKey}</p>
-            <p>Amount: ${tx.amount} ETH }</p>
-            <p>Timestamp: ${tx.timestamp}</p>
-            <p>Hash: ${tx.hash}</p>
-            
+            <h4><strong>Block ${transactionCount++} (${type})</strong></h4>
+            ${tx.previousHash ? `<p><strong>Previous Block Hash:</strong> ${tx.previousHash}</p>` : '<p><strong>This is the Genesis Block.</strong></p>'}
+            <pre><strong>Data:</strong> ${dataJson}</pre>
+            <p><strong>Timestamp:</strong> ${tx.timestamp}</p>
+            <p><strong>Hash:</strong> ${tx.hash}</p>
         </div>
     `;
 }
+
 
 
 // When "Send" button is clicked, create a new transaction and update the display
@@ -353,3 +361,20 @@ document.getElementById('sellButton').onclick = async function () {
         alert("Invalid amount or insufficient balance.");
     }
 };
+
+
+// Hàm mở cửa sổ đăng nhập
+document.getElementById('loginLink').addEventListener('click', function(event) {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
+    const loginWindow = window.open('login.html', '_blank', 'width=300,height=200'); // Kích thước cửa sổ nhỏ
+});
+
+// Hàm mở cửa sổ đăng ký
+document.getElementById('registerLink').addEventListener('click', function(event) {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
+    const registerWindow = window.open('register.html', '_blank', 'width=300,height=200'); // Kích thước cửa sổ nhỏ
+});
+
+
+//Mở local chứa thông tin đăng nhập
+

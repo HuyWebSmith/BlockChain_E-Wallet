@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Người Dùng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 50%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+
+        .user-info {
+            flex-grow: 1;
+        }
+
+        .delete-btn {
+            background-color: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff4c4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Danh Sách Người Dùng Đã Đăng Ký</h2>
+        <ul id="userList"></ul>
+    </div>
+
+    <script>
+        function displayUsers() {
+            const userListElement = document.getElementById('userList');
+            userListElement.innerHTML = ''; // Xóa danh sách cũ trước khi hiển thị
+
+            // Duyệt qua tất cả các mục trong localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const userData = localStorage.getItem(key);
+
+                try {
+                    // Kiểm tra và phân tích JSON nếu hợp lệ
+                    const user = JSON.parse(userData);
+
+                    // Tạo một mục danh sách hiển thị thông tin người dùng
+                    const li = document.createElement('li');
+
+                    // Thông tin người dùng
+                    const userInfo = document.createElement('span');
+                    userInfo.classList.add('user-info');
+                    userInfo.innerText = `Tài khoản: ${user.username}, Public Key: ${user.publicKey}, Private Key: ${user.privateKey}`;
+
+                    // Nút xóa
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerText = 'Xóa';
+                    deleteButton.classList.add('delete-btn');
+                    deleteButton.addEventListener('click', function () {
+                        // Xóa người dùng khỏi localStorage
+                        localStorage.removeItem(user.username);
+                        displayUsers(); // Cập nhật lại danh sách sau khi xóa
+                    });
+
+                    // Thêm thông tin và nút xóa vào mục danh sách
+                    li.appendChild(userInfo);
+                    li.appendChild(deleteButton);
+
+                    // Thêm mục danh sách vào danh sách người dùng
+                    userListElement.appendChild(li);
+                } catch (error) {
+                    console.error(`Lỗi phân tích JSON cho key "${key}":`, error);
+                    // Bỏ qua mục này nếu không phải là JSON hợp lệ
+                    continue;
+                }
+            }
+        }
+
+        // Gọi hàm để hiển thị người dùng khi trang tải
+        displayUsers();
+    </script>
+</body>
+</html>
