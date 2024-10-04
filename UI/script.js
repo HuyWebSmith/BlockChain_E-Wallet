@@ -167,6 +167,9 @@ async function displayNewTransactionInWindow(tx, type) {
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
         transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
+    } else {
+        // Xóa nội dung cũ khi giao dịch mới được thêm vào
+        transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
     }
     
     const transactionsFromStorage = JSON.parse(localStorage.getItem('transactions')) || [];
@@ -202,6 +205,7 @@ async function displayNewTransactionInWindow(tx, type) {
         "Amount": tx.amount
     }, null, 2); // Tạo định dạng JSON với 2 space
 
+    
     transactionsFromStorage.forEach((tx, index) => {
         transactionWindow.document.body.innerHTML += `
             <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
@@ -212,7 +216,9 @@ async function displayNewTransactionInWindow(tx, type) {
                 <p><strong>Hash:</strong> ${tx.hash}</p>
             </div>
         `;
+        
     });
+    
 }
 
 
@@ -250,6 +256,9 @@ document.getElementById('sendButton').addEventListener('click', async function (
         senderPrivateKey: currentUserData.privateKey,
         recipientPublicKey: recipientKeys.publicKey,
         amount: amount,
+        hash: newTransactionHash,
+        previousHash: lastTransactionHash,
+        timestamp: transactionTimestamp // Thêm timestamp vào giao dịch
     };
     transactions.push(newTransaction);
 
@@ -291,88 +300,7 @@ async function hashTransaction(data) {
     return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Mở một tab mới với thông tin giao dịch
-function openTransactionTab(transaction, hash) {
-    const newTab = window.open('', '_blank');
-    if (newTab) {
-        newTab.document.write('<html><head><title>Transaction Info</title></head><body>');
-        newTab.document.write('<h3>Transaction Details</h3>');
-        newTab.document.write(`<p><strong>Sender Public Key:</strong> ${transaction.senderPublicKey}</p>`);
-        newTab.document.write(`<p><strong>Sender Private Key:</strong> ${transaction.senderPrivateKey}</p>`);
-        newTab.document.write(`<p><strong>Recipient Public Key:</strong> ${transaction.recipientPublicKey}</p>`);
-        newTab.document.write(`<p><strong>Amount:</strong> ${transaction.amount} ETH</p>`);
-        newTab.document.write(`<p><strong>Transaction Hash:</strong> ${hash}</p>`);
-        newTab.document.write('</body></html>');
-        newTab.document.close();
-    } else {
-        alert('Your browser blocked the new tab. Please allow pop-ups.');
-    }
-}
 
-
-// Buy ETH
-document.getElementById('buyButton').onclick = async function () {
-    const amount = parseFloat(prompt("Enter amount to buy (ETH):"));
-    if (amount > 0) {
-        balance += amount;
-
-        // Generate keys for the transaction
-        const senderKeys = generateKeys();
-        const recipientKeys = generateKeys();
-
-        const transaction = {
-            senderPublicKey: senderKeys.publicKey,
-            senderPrivateKey: senderKeys.privateKey,
-            recipientPublicKey: recipientKeys.publicKey,
-            amount,
-        };
-
-        // Update balance and display transaction
-        updateBalance();
-        const hash = await generateTransactionHash(amount, "buy", lastTransactionHash);
-
-        // Thêm giao dịch mới vào localStorage
-        transactions.push({ ...transaction, hash, previousHash: lastTransactionHash });
-        localStorage.setItem('transactions', JSON.stringify(transactions));
-
-        displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Buy');
-        lastTransactionHash = hash; // Update the last transaction hash
-    } else {
-        alert("Invalid amount.");
-    }
-};
-
-// Sell ETH
-document.getElementById('sellButton').onclick = async function () {
-    const amount = parseFloat(prompt("Enter amount to sell (ETH):"));
-    if (amount > 0 && amount <= balance) {
-        balance -= amount; // Deduct from balance
-
-        // Generate keys for the transaction
-        const senderKeys = generateKeys();
-        const recipientKeys = generateKeys();
-
-        const transaction = {
-            senderPublicKey: senderKeys.publicKey,
-            senderPrivateKey: senderKeys.privateKey,
-            recipientPublicKey: recipientKeys.publicKey,
-            amount,
-        };
-
-        // Update balance and display transaction
-        updateBalance();
-        const hash = await generateTransactionHash(amount, "sell", lastTransactionHash);
-
-        // Thêm giao dịch mới vào localStorage
-        transactions.push({ ...transaction, hash, previousHash: lastTransactionHash });
-        localStorage.setItem('transactions', JSON.stringify(transactions));
-
-        displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Sell');
-        lastTransactionHash = hash; // Update the last transaction hash
-    } else {
-        alert("Invalid amount or insufficient balance.");
-    }
-};
 
 
 // Hàm mở cửa sổ đăng nhập
