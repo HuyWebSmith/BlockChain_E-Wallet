@@ -250,9 +250,6 @@ document.getElementById('sendButton').addEventListener('click', async function (
         senderPrivateKey: currentUserData.privateKey,
         recipientPublicKey: recipientKeys.publicKey,
         amount: amount,
-        hash: newTransactionHash,
-        previousHash: lastTransactionHash,
-        timestamp: transactionTimestamp // Thêm timestamp vào giao dịch
     };
     transactions.push(newTransaction);
 
@@ -369,7 +366,7 @@ document.getElementById('sellButton').onclick = async function () {
         // Thêm giao dịch mới vào localStorage
         transactions.push({ ...transaction, hash, previousHash: lastTransactionHash });
         localStorage.setItem('transactions', JSON.stringify(transactions));
-        
+
         displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Sell');
         lastTransactionHash = hash; // Update the last transaction hash
     } else {
