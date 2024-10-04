@@ -167,8 +167,9 @@ async function displayNewTransactionInWindow(tx, type) {
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
         transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
-        transactionCount = 1; // Reset transaction count
     }
+    
+    const transactionsFromStorage = JSON.parse(localStorage.getItem('transactions')) || [];
 
     // Hiện phần Mining...
     const miningDiv = transactionWindow.document.createElement('div');
@@ -201,15 +202,17 @@ async function displayNewTransactionInWindow(tx, type) {
         "Amount": tx.amount
     }, null, 2); // Tạo định dạng JSON với 2 space
 
-    transactionWindow.document.body.innerHTML += `
-        <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
-            <h4><strong>Block ${transactionCount++} (${type})</strong></h4>
-            ${tx.previousHash ? `<p><strong>Previous Block Hash:</strong> ${tx.previousHash}</p>` : '<p><strong>This is the Genesis Block.</strong></p>'}
-            <pre><strong>Data:</strong> ${dataJson}</pre>
-            <p><strong>Timestamp:</strong> ${tx.timestamp}</p>
-            <p><strong>Hash:</strong> ${tx.hash}</p>
-        </div>
-    `;
+    transactionsFromStorage.forEach((tx, index) => {
+        transactionWindow.document.body.innerHTML += `
+            <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+                <h4><strong>Block ${index + 1} (${type})</strong></h4>
+                ${tx.previousHash ? `<p><strong>Previous Block Hash:</strong> ${tx.previousHash}</p>` : '<p><strong>This is the Genesis Block.</strong></p>'}
+                <pre><strong>Data:</strong> ${JSON.stringify(tx, null, 2)}</pre>
+                <p><strong>Timestamp:</strong> ${tx.timestamp}</p>
+                <p><strong>Hash:</strong> ${tx.hash}</p>
+            </div>
+        `;
+    });
 }
 
 
@@ -232,7 +235,8 @@ document.getElementById('sendButton').addEventListener('click', async function (
     ethBalance -= amount;
 
     // Generate a random key pair for the sender and a random public key for the recipient
-    const senderKeys = generateKeys();
+    const currentUsername = localStorage.getItem('currentUser');
+    const currentUserData = JSON.parse(localStorage.getItem(currentUsername));
     const recipientKeys = generateKeys();
 
     // Generate a hash for the new transaction
@@ -240,11 +244,10 @@ document.getElementById('sendButton').addEventListener('click', async function (
 
     // Thêm thuộc tính timestamp vào giao dịch
     const transactionTimestamp = new Date().toLocaleString(); // Lấy thời gian hiện tại
-
     // Save the transaction in the list
     const newTransaction = {
-        senderPublicKey: senderKeys.publicKey,
-        senderPrivateKey: senderKeys.privateKey,
+        senderPublicKey: currentUserData.publicKey,
+        senderPrivateKey: currentUserData.privateKey,
         recipientPublicKey: recipientKeys.publicKey,
         amount: amount,
         hash: newTransactionHash,
@@ -253,6 +256,8 @@ document.getElementById('sendButton').addEventListener('click', async function (
     };
     transactions.push(newTransaction);
 
+    // Lưu giao dịch vào localStorage
+    localStorage.setItem('transactions', JSON.stringify(transactions));
     // Update the last transaction hash
     lastTransactionHash = newTransactionHash;
 
@@ -328,6 +333,11 @@ document.getElementById('buyButton').onclick = async function () {
         // Update balance and display transaction
         updateBalance();
         const hash = await generateTransactionHash(amount, "buy", lastTransactionHash);
+
+        // Thêm giao dịch mới vào localStorage
+        transactions.push({ ...transaction, hash, previousHash: lastTransactionHash });
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+
         displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Buy');
         lastTransactionHash = hash; // Update the last transaction hash
     } else {
@@ -355,6 +365,11 @@ document.getElementById('sellButton').onclick = async function () {
         // Update balance and display transaction
         updateBalance();
         const hash = await generateTransactionHash(amount, "sell", lastTransactionHash);
+
+        // Thêm giao dịch mới vào localStorage
+        transactions.push({ ...transaction, hash, previousHash: lastTransactionHash });
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+        
         displayNewTransactionInWindow({ ...transaction, hash, previousHash: lastTransactionHash }, 'Sell');
         lastTransactionHash = hash; // Update the last transaction hash
     } else {

@@ -90,7 +90,7 @@
                     // Thông tin người dùng
                     const userInfo = document.createElement('span');
                     userInfo.classList.add('user-info');
-                    userInfo.innerText = `Tài khoản: ${user.username}, Public Key: ${user.publicKey}, Private Key: ${user.privateKey}`;
+                    userInfo.innerText = `Tài khoản: ${user.username}, Public Key: ${user.publicKey ? user.publicKey : 'N/A'}, Private Key: ${user.privateKey ? user.privateKey : 'N/A'}`;
 
                     // Nút xóa
                     const deleteButton = document.createElement('button');
@@ -98,7 +98,7 @@
                     deleteButton.classList.add('delete-btn');
                     deleteButton.addEventListener('click', function () {
                         // Xóa người dùng khỏi localStorage
-                        localStorage.removeItem(user.username);
+                        localStorage.removeItem(key);
                         displayUsers(); // Cập nhật lại danh sách sau khi xóa
                     });
 

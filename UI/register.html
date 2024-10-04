@@ -44,6 +44,9 @@
             };
             localStorage.setItem(username, JSON.stringify(user)); // Lưu thông tin vào localStorage dưới dạng JSON
 
+            // Lưu thông tin người dùng hiện tại
+            localStorage.setItem('currentUser', username); // Lưu thông tin người dùng hiện tại dưới dạng JSON
+
             document.getElementById('registerMessage').innerText = 'Đăng Ký Thành Công!';
 
             // Kiểm tra lưu thành công bằng console log

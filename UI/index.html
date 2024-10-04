@@ -13,7 +13,7 @@
         </div>
 
         <div class="account-section">
-            <div>
+            <div id="accountInfo">
                 <p>Tài Khoản: <span id="accountName">Account 1</span></p>
                 <p>Public Key: <span id="walletAddress">0xYourWalletAddressHere...</span></p>
             </div>
@@ -26,10 +26,25 @@
         <script>
             // Lấy thông tin từ localStorage
             const username = localStorage.getItem('currentUser');
+            const accountInfo = document.getElementById('accountInfo');
+            const balanceSection = document.querySelector('.account-section p.balance');
+            const usdValueSection = document.querySelector('.account-section p.usd-value');
+            const percentageChangeSection = document.querySelector('.account-section p.percentage-change');
+
             if (username) {
                 const storedUser = JSON.parse(localStorage.getItem(username));
                 document.getElementById('accountName').innerText = username; // Hiển thị tên tài khoản
                 document.getElementById('walletAddress').innerText = storedUser.publicKey; // Hiển thị public key
+
+                // Hiển thị thông tin số dư và tỷ lệ thay đổi
+                balanceSection.style.display = 'block';
+                usdValueSection.style.display = 'block';
+                percentageChangeSection.style.display = 'block';
+            } else {
+                accountInfo.style.display = 'none'; // Ẩn thông tin tài khoản nếu chưa đăng nhập
+                balanceSection.style.display = 'none'; // Ẩn thông tin số dư nếu chưa đăng nhập
+                usdValueSection.style.display = 'none'; // Ẩn giá trị USD nếu chưa đăng nhập
+                percentageChangeSection.style.display = 'none'; // Ẩn tỷ lệ thay đổi nếu chưa đăng nhập
             }
     
             document.getElementById('logoutButton').addEventListener('click', function() {
@@ -46,7 +61,6 @@
             <input type="text" id="amount" placeholder="Enter amount">
 
             <button class="send-button" id="sendButton">Send</button>
-
             <button class="buy-button" id="buyButton">Buy</button>
             <button class="sell-button" id="sellButton">Sell</button>
         </div>
@@ -55,7 +69,6 @@
             <a href="#" id="loginLink">Đăng Nhập</a>
             <span> | </span>
             <a href="#" id="registerLink">Đăng Ký</a>
-            
         </div>
             
         <div class="transaction-section">
@@ -66,5 +79,25 @@
 
     <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
+
+    <script>
+        // Thêm sự kiện cho nút Send
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const recipientAddress = document.getElementById('recipient').value;
+            const amount = document.getElementById('amount').value;
+
+            // Kiểm tra dữ liệu nhập
+            if (!recipientAddress || !amount) {
+                alert('Vui lòng nhập địa chỉ người nhận và số tiền.');
+                return;
+            }
+
+            // Giả lập giao dịch
+            document.getElementById('transactionStatus').innerText = `Đã gửi ${amount} ETH tới ${recipientAddress}.`;
+            // Reset trường nhập
+            document.getElementById('recipient').value = '';
+            document.getElementById('amount').value = '';
+        });
+    </script>
 </body>
 </html>
