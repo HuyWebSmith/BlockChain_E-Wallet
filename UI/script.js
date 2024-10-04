@@ -167,6 +167,64 @@ async function displayNewTransactionInWindow(tx, type) {
     if (!transactionWindow || transactionWindow.closed) {
         transactionWindow = window.open('', '_blank', 'width=600,height=400');
         transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f0f8ff;
+                color: #333;
+                padding: 20px;
+                margin: 0;
+            }
+            h2 {
+                text-align: center;
+                color: #2980b9; /* Thay đổi màu tiêu đề */
+                background-color: #ecf0f1; /* Nền cho tiêu đề */
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transaction-block {
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                background-color: #ffffff;
+                padding: 20px;
+                margin: 15px 0;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s, box-shadow 0.2s;
+                position: relative; /* Để tạo hiệu ứng cho dấu chấm */
+            }
+            .transaction-block:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+            .transaction-block h4 {
+                margin: 0 0 10px 0;
+                color: #2980b9; /* Màu tiêu đề trong khối giao dịch */
+                border-bottom: 2px solid #2980b9; /* Đường kẻ dưới tiêu đề */
+                padding-bottom: 5px;
+            }
+            .transaction-block p {
+                margin: 5px 0;
+                line-height: 1.6;
+                color: #34495e; /* Màu cho văn bản */
+            }
+            .transaction-block strong {
+                color: #2c3e50; /* Màu cho văn bản đậm */
+            }
+            .mining {
+                text-align: center;
+                font-size: 18px;
+                margin: 15px 0;
+                color: #e67e22;
+            }
+            .mining span {
+                font-weight: bold;
+            }
+        `;
+        transactionWindow.document.head.appendChild(style);
+
     } else {
         // Xóa nội dung cũ khi giao dịch mới được thêm vào
         transactionWindow.document.body.innerHTML = `<h2>Blockchain Transactions</h2>`;
