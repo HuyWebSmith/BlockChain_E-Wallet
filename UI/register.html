@@ -4,19 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff;
+            background-color: #fff;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .auth-links a {
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        #register-message {
+            color: green;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h2>Đăng Ký</h2>
-    <form id="registerForm">
-        <label for="newUsername">Tài Khoản:</label>
-        <input type="text" id="newUsername" required>
-        <br>
-        <label for="newPassword">Mật Khẩu:</label>
-        <input type="password" id="newPassword" required>
-        <br>
-        <button type="submit">Đăng Ký</button>
-    </form>
-    <div id="registerMessage"></div>
+    <div class="container">
+        <h2>Đăng Ký</h2>
+        <form id="registerForm">
+            <label for="newUsername">Tài Khoản:</label>
+            <input type="text" id="newUsername" required>
+            <label for="newPassword">Mật Khẩu:</label>
+            <input type="password" id="newPassword" required>
+            <button type="submit">Đăng Ký</button>
+        </form>
+        <div id="register-message"></div>
+        <div class="auth-links">
+            <a href="login.html">Đã có tài khoản? Đăng nhập</a>
+        </div>
+    </div>
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', function(event) {
@@ -25,34 +126,28 @@
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
 
-            // Kiểm tra xem tài khoản đã tồn tại chưa
             if (localStorage.getItem(username)) {
-                document.getElementById('registerMessage').innerText = 'Tài khoản đã tồn tại!';
+                document.getElementById('register-message').innerText = 'Tài khoản đã tồn tại!';
                 return;
             }
 
-            // Tạo public key và private key giả định
-            const publicKey = `0x${Math.random().toString(16).slice(2, 18)}`; // Random 16 ký tự
-            const privateKey = `0x${Math.random().toString(16).slice(2, 18)}`; // Random 16 ký tự
+            const publicKey = `0x${Math.random().toString(16).slice(2, 18)}`;
+            const privateKey = `0x${Math.random().toString(16).slice(2, 18)}`;
 
-            // Lưu thông tin tài khoản vào localStorage
             const user = {
                 username: username,
                 password: password,
                 publicKey: publicKey,
                 privateKey: privateKey
             };
-            localStorage.setItem(username, JSON.stringify(user)); // Lưu thông tin vào localStorage dưới dạng JSON
+            localStorage.setItem(username, JSON.stringify(user));
+            localStorage.setItem('currentUser', username);
 
-            // Lưu thông tin người dùng hiện tại
-            localStorage.setItem('currentUser', username); // Lưu thông tin người dùng hiện tại dưới dạng JSON
-
-            document.getElementById('registerMessage').innerText = 'Đăng Ký Thành Công!';
-
-            // Kiểm tra lưu thành công bằng console log
+            document.getElementById('register-message').innerText = 'Đăng Ký Thành Công!';
             console.log('Tài khoản đã lưu:', JSON.parse(localStorage.getItem(username)));
-
-            window.close(); // Đóng cửa sổ đăng ký sau khi hoàn tất
+            setTimeout(() => {
+                window.close();
+            }, 1000);
         });
     </script>
 </body>

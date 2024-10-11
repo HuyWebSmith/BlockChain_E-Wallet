@@ -4,19 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff;
+            background-color: #fff;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .auth-links a {
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h2>Đăng Nhập</h2>
-    <form id="loginForm">
-        <label for="username">Tài Khoản:</label>
-        <input type="text" id="username" required>
-        <br>
-        <label for="password">Mật Khẩu:</label>
-        <input type="password" id="password" required>
-        <br>
-        <button type="submit">Đăng Nhập</button>
-    </form>
-    <div id="loginMessage"></div>
+    <div class="container">
+        <h2>Đăng Nhập</h2>
+        <form id="loginForm">
+            <label for="username">Tài Khoản:</label>
+            <input type="text" id="username" required>
+            <label for="password">Mật Khẩu:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Đăng Nhập</button>
+        </form>
+        <div id="error-message"></div>
+        <div class="auth-links">
+            <a href="register.html">Chưa có tài khoản? Đăng ký ngay</a>
+        </div>
+    </div>
+
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Ngăn chặn hành vi mặc định của form
@@ -24,22 +126,17 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Kiểm tra thông tin đăng nhập
-            const storedUser = JSON.parse(localStorage.getItem(username)); // Lấy thông tin tài khoản từ localStorage
+            const storedUser = JSON.parse(localStorage.getItem(username));
             if (storedUser && storedUser.password === password) {
-                document.getElementById('loginMessage').innerText = 'Đăng Nhập Thành Công!';
-                localStorage.setItem('currentUser', username); // Lưu tên người dùng
-                alert(`Public Key: ${storedUser.publicKey}\nPrivate Key: ${storedUser.privateKey}`); // Hiển thị key
-                
-                // Tự động đóng cửa sổ sau 1 giây
+                document.getElementById('error-message').innerText = 'Đăng Nhập Thành Công!';
+                localStorage.setItem('currentUser', username);
+                alert(`Public Key: ${storedUser.publicKey}\nPrivate Key: ${storedUser.privateKey}`);
                 setTimeout(() => {
-                    window.close(); // Đóng cửa sổ đăng nhập
+                    window.close();
                 }, 1000);
             } else {
-                document.getElementById('loginMessage').innerText = 'Tài khoản hoặc mật khẩu không đúng!';
+                document.getElementById('error-message').innerText = 'Tài khoản hoặc mật khẩu không đúng!';
             }
-
-            
         });
     </script>
 </body>
