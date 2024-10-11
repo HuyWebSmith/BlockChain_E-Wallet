@@ -2,7 +2,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f6fa;
+    background-color: #535453;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -164,5 +164,13 @@ button {
     text-decoration: underline; /* Thêm gạch chân khi hover */
 }
 
+#logoutButton {
+    background-color: #f44336; /* Red */
+    color: white;
+}
 
+#showPrivateKeyButton {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
 

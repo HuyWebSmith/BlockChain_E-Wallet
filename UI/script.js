@@ -160,7 +160,7 @@ async function sha256(message) {
 
 
 
-// Function to display the new transaction in the opened window
+
 // Function to display the new transaction in the opened window
 async function displayNewTransactionInWindow(tx, type) {
     // If the transaction window doesn't exist or is closed, open a new one

@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MetaMask Clone UI</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS cho hộp thoại nhập mật khẩu */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="metamask-container">
@@ -16,11 +54,23 @@
             <div id="accountInfo">
                 <p>Tài Khoản: <span id="accountName">Account 1</span></p>
                 <p>Public Key: <span id="walletAddress">0xYourWalletAddressHere...</span></p>
+                <button id="showPrivateKeyButton">Hiển Thị Private Key</button>
+                <p id="privateKey" style="display:none;">Private Key: <span id="privateKeyValue"></span></p>
             </div>
             <button id="logoutButton">Đăng Xuất</button>
             <p class="balance" id="balance">Balance: 5000 ETH</p>
             <p class="usd-value" id="usdValue">≈ $15,000</p>
             <p class="percentage-change" id="percentageChange">Change: +2.5%</p>
+        </div>
+
+        <!-- Hộp thoại nhập mật khẩu -->
+        <div id="passwordModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Nhập Mật Khẩu</h3>
+                <input type="password" id="passwordInput" placeholder="Mật khẩu" />
+                <button id="confirmPasswordButton">Xác Nhận</button>
+            </div>
         </div>
 
         <script>
@@ -51,6 +101,47 @@
                 localStorage.removeItem('currentUser'); // Xóa thông tin đăng nhập
                 window.location.reload(); // Tải lại trang
             });
+
+            document.getElementById('showPrivateKeyButton').addEventListener('click', function() {
+                const passwordModal = document.getElementById('passwordModal');
+                passwordModal.style.display = "block"; // Hiển thị hộp thoại nhập mật khẩu
+            });
+
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('passwordModal').style.display = "none"; // Ẩn hộp thoại
+            };
+
+            document.getElementById('confirmPasswordButton').addEventListener('click', function() {
+                const password = document.getElementById('passwordInput').value;
+                const storedUser = JSON.parse(localStorage.getItem(username));
+
+                if (password === storedUser.password) {
+                    const privateKeyValue = storedUser.privateKey;
+                    document.getElementById('privateKeyValue').innerText = privateKeyValue;
+                    document.getElementById('privateKey').style.display = 'block';
+                    document.getElementById('passwordModal').style.display = "none"; // Ẩn hộp thoại
+                    togglePrivateKeyButton(this); // Gọi hàm hoán đổi nút
+                } else {
+                    alert("Mật khẩu không đúng!");
+                }
+            });
+
+            function togglePrivateKeyButton(button) {
+                const currentText = button.innerText;
+                if (currentText === 'Xác Nhận') {
+                    button.innerText = 'Ẩn Private Key'; // Đổi tên nút
+                    button.onclick = hidePrivateKey; // Đặt hàm ẩn key
+                } else {
+                    hidePrivateKey();
+                    button.innerText = 'Hiển Thị Private Key'; // Đổi lại tên nút
+                }
+            }
+
+            function hidePrivateKey() {
+                document.getElementById('privateKey').style.display = 'none';
+                document.getElementById('showPrivateKeyButton').innerText = 'Hiển Thị Private Key'; // Đổi lại tên nút
+            }
+
         </script>
         
         <div class="send-section">
