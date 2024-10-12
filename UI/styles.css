@@ -2,19 +2,20 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #535453;
+    background-color:#000000;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    
 }
 
 .metamask-container {
     width: 350px;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
@@ -33,6 +34,7 @@ body {
 .account-section {
     padding: 20px 0;
     text-align: center;
+    padding-bottom: 0;
 }
 
 .account-label {
@@ -64,7 +66,7 @@ body {
 }
 
 .send-section input {
-    width: 100%;
+    width:95%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #e1e1e1;
@@ -155,13 +157,19 @@ button {
 }
 
 .auth-links a {
-    font-size: 14px; /* Kích thước chữ nhỏ hơn */
+    color: #f6851b; /* Màu chữ */
     text-decoration: none; /* Bỏ gạch chân */
-    color: #007bff; /* Màu chữ cho các liên kết */
+    padding: 6px 13px; /* Khoảng cách bên trong */
+    border: 2px solid #f6851b; /* Viền */
+    border-radius: 5px; /* Bo góc */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển tiếp */
+    text-align: center;
 }
 
 .auth-links a:hover {
-    text-decoration: underline; /* Thêm gạch chân khi hover */
+    background-color: #0ba29d; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+    transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
 }
 
 #logoutButton {
@@ -173,4 +181,103 @@ button {
     background-color: #4CAF50; /* Green */
     color: white;
 }
+
+.login-invitation h3 {
+    font-size: 18px;
+    color: #0ba29d;
+}
+
+.login-invitation p {
+    font-size: 16px;
+    color: #555;
+}
+
+button {
+    background-color: #0ba29d;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #c3ec52;
+    transform: scale(1.05);
+}
+
+.crypto-bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none; /* Để không ảnh hưởng đến tương tác người dùng */
+    z-index: 0; /* Để đảm bảo chúng ở dưới cùng */
+}
+
+.bubble {
+    position: absolute;
+    width: 40px; /* Kích thước nhỏ hơn cho hiệu ứng tuyết */
+    height: 40px; /* Kích thước nhỏ hơn cho hiệu ứng tuyết */
+    opacity: 0.9; /* Độ trong suốt của bong bóng */
+    animation: fall 10s linear infinite; /* Thời gian animation dài hơn */
+    border-radius: 50%; /* Làm cho nó tròn như tuyết */
+    z-index: 0; /* Để đảm bảo nó nằm ở dưới cùng */
+}
+
+/* Tạo nhiều bong bóng khác nhau */
+.bubble:nth-child(1) {
+    left: 10%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 0s; /* Không có delay */
+}
+.bubble:nth-child(2) {
+    left: 20%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 1s; /* Delay 1 giây */
+}
+.bubble:nth-child(3) {
+    left: 30%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 2s; /* Delay 2 giây */
+}
+.bubble:nth-child(4) {
+    left: 40%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 3s; /* Delay 3 giây */
+}
+.bubble:nth-child(5) {
+    left: 50%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 4s; /* Delay 4 giây */
+}
+.bubble:nth-child(6) {
+    left: 60%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 5s; /* Delay 5 giây */
+}
+.bubble:nth-child(7) {
+    left: 70%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 6s; /* Delay 6 giây */
+}
+.bubble:nth-child(8) {
+    left: 80%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 7s; /* Delay 7 giây */
+}
+.bubble:nth-child(9) {
+    left: 90%; /* Vị trí x ngẫu nhiên */
+    animation-delay: 8s; /* Delay 8 giây */
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg); /* Bắt đầu ở vị trí cao hơn */
+        opacity: 1; /* Độ trong suốt khi bắt đầu */
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg); /* Kết thúc ở vị trí dưới cùng và xoay 360 độ */
+        opacity: 0; /* Tắt dần khi rơi */
+    }
+}
+
 
